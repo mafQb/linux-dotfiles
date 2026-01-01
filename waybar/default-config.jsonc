@@ -1,0 +1,21 @@
+{
+	"position": "top",
+	"margin": "10 15 0",
+	"modules-left": ["hyprland/workspaces"],
+	"modules-center": ["clock","tray"],
+	"modules-right": ["pulseaudio", "network", "battery", "custom/notification"],
+	"clock": {
+		"interval": 60,
+		"format": "{:%H:%M %d %b}",
+		"max-length": 25
+	},
+	"hyprland/workspaces": {
+		"persistent-workspaces": {
+			"*": 5
+		}
+	},
+	"tray": {
+		"icon-size": 21,
+		"spacing": 10
+	}
+}
