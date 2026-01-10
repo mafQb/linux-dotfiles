@@ -11,16 +11,31 @@
 # fi
 
 # Auto-start the ssh agent and add keys once per session (if not already running)
-if [ ! -S ~/.ssh/ssh_auth_sock ]; then
-    eval "$(ssh-agent -s)"
-    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+SSH_ENV="$HOME/.ssh/agent-environment"
+
+function start_agent {
+    echo "Initializing new SSH agent..."
+    # Ensure the environment file is created and has correct permissions
+    touch "${SSH_ENV}"
+    chmod 600 "${SSH_ENV}"
+    # Start the agent and capture its output (env vars) to the file
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+}
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    # Check if the agent process in the file is still running
+    kill -0 $SSH_AGENT_PID 2>/dev/null || { start_agent; }
+else
+    start_agent
 fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 
 # Add default keys if none are loaded
 ssh-add -l > /dev/null
 if [ "$?" -ne "0" ]; then
-    ssh-add ~/.ssh/github/private
+    ssh-add ~/.ssh/bitbucket-work
+    ssh-add ~/.ssh/github-personal
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
