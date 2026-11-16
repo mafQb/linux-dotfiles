@@ -1,0 +1,11 @@
+brave-bin
+downgrade
+lib32-audit
+lmstudio-bin
+neofetch
+protonup-qt
+sddm-silent-theme
+waybar-git
+xpadneo-dkms
+yay
+yay-debug
